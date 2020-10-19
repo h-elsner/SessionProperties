@@ -412,7 +412,44 @@ end;
 procedure TMain.XMLsuchen(fn: string);             {Open XML to check against lfm}
 var i, zhl, idx: integer;
     inlist, objlist, xmllist, outlist: TStringList;
-    rootid, obj, s: string;
+    rootid, obj: string;
+
+  procedure DeleteXMLrelicts;                      {Correct XML file}
+  var s, obj: string;
+      i: integer;
+      done: boolean;
+  begin
+    done:=false;
+    rootid:='<'+trim(objlist[0].Split([dpkt])[0]);
+    inlist.LoadFromFile(fn);
+    s:=tabn+rootid;                                {Create new corrcted line}
+    for i:=0 to outlist.Count-1 do begin
+      obj:=outlist[i].Split([gleich])[0];
+      s:=s+tab1+obj+gleich+
+         qchar+StringReplace(outlist[i], obj, '', [])+qchar;
+    end;                                           {Done, s contains corrected line}
+
+    if length(s)>(length(tabn)+length(endm)) then begin
+      inlist.SaveToFile(ChangeFileExt(fn, backup)); {Save backup first}
+      for i:=0 to inlist.Count-1 do begin
+        if pos(rootid, inlist[i])>0 then begin     {Find line with SessionProperties}
+          obj:=inlist[i];
+          if obj[length(obj)-1]=endm then
+            s:=s+endm;
+          s:=s+'>';
+          inlist[i]:=s;                            {Replace SessionProperties in XML}
+          done:=true;
+          break;
+        end;
+      end;
+      if done then begin                           {Save only if something has changed}
+        inlist.SaveToFile(fn);
+        StatusBar.Panels[3].Text:=ExtractFileName(fn)+tab1+
+                                  rsCorrected;
+      end;
+    end;
+  end;
+
 begin
   inlist:=TStringList.Create;
   objlist:=TStringList.Create;
@@ -466,39 +503,12 @@ begin
 
             if zhl=0 then begin                    {No unused items found}
               StatusBar.Panels[3].Text:=ExtractFileName(fn)+' --> '+rsKeine;
-              StatusBar.Tag:=3;                    {Green LED}
+              StatusBar.Tag:=2;                    {Green LED}
             end else begin                         {Unused found}
               StatusBar.Tag:=3;                    {Red LED}
-
               if cbDelete.Checked and              {if really needed}
-                 (outlist.Count>1) then begin      {Save corrected XML file}
-                inlist.LoadFromFile(fn);
-                rootid:='<'+trim(objlist[0].Split([dpkt])[0]);
-                s:=tabn+rootid;                    {Create new corrcted line}
-                for i:=0 to outlist.Count-1 do begin
-                  obj:=outlist[i].Split([gleich])[0];
-                  s:=s+tab1+obj+gleich+
-                     qchar+StringReplace(outlist[i], obj, '', [])+qchar;
-                end;
-
-                if length(s)>(length(tabn)+length(endm)) then begin
-                  inlist.SaveToFile(ChangeFileExt(fn, backup));
-                  for i:=0 to inlist.Count-1 do begin
-                    if pos(rootid, inlist[i])>0 then begin
-                      obj:=inlist[i];
-                      if obj[length(obj)-1]=endm then
-                        s:=s+endm;
-                      s:=s+'>';
-                      inlist[i]:=s;                {Replace SessionProperties}
-                      break;
-                    end;
-                  end;
-                  inlist.SaveToFile(fn);
-                  StatusBar.Panels[3].Text:=ExtractFileName(fn)+tab1+
-                                            rsCorrected;
-                end;
-              end;
-
+                 (outlist.Count>1) then
+                DeleteXMLrelicts;                  {Save corrected XML file}
             end;
           end else
             StatusBar.Panels[3].Text:=errNoXML;
