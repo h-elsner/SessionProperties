@@ -32,9 +32,9 @@ Boston, MA 02110-1335, USA.
 ================================================================================
 Brief description:
 
-Lazarus-IDE has Session Properties at the main form to store program settings for next start.
+Lazarus-IDE - SessionProperties to store program settings for next start.
 
-But if you try to rename objects that are already assigned to Session Properties,
+If you try to rename objects that are already assigned to Session Properties,
 these items will not be renamed.
 
 This means, assignmet is lost and program settings are not kept.
