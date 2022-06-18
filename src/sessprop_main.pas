@@ -141,7 +141,7 @@ const
   endm='/';                                        {End XML node}
   gleich='=';
 
-  backup='.bak';
+  bkup='.bak';
   tab1=' ';
   tabn='   ';
 
@@ -181,7 +181,7 @@ begin
   OpenDialog.Filter:=rsExtFilter;                  {Filter file type}
   actSaveCSV.Caption:=capSaveCSV;                  {Popup menu Save as CSV}
   actSaveCSV.Hint:=ttSaveDialog;
-  mnSaveCSV.Enabled:=false;                        {Disable Save menu (default)}
+  actSaveCSV.Enabled:=false;                       {Disable Save menu (default)}
   mnFunction.Caption:=capFunc;
   gridResults.RowCount:=defRows;                   {Show empty table}
   gridResults.Rows[0].Delimiter:=sep;
@@ -318,7 +318,8 @@ begin
     SetStatusbar(inlist.Count);                    {Reset StatusBar}
     if inlist.Count>4 then begin
       StatusBar.Panels[3].Text:=ExtractFileName(fn);
-      mnSaveCSV.Enabled:=true;                     {Enable Save menu}
+      Caption:=rsProgName+tabn+StatusBar.Panels[3].Text;
+      actSaveCSV.Enabled:=true;                    {Enable Save menu}
 
       spp:=findProperties(inlist, objlist);        {Scan all and create object list}
 
@@ -327,7 +328,7 @@ begin
           StatusBar.Panels[3].Text:=rsNix;
           ShowObjectList(objlist);                 {Show object list instead}
         end else begin                             {SessionProperties available}
-          rootobj:=trim(objlist[0].Split([dpkt])[0]); {Save class name TForm}
+          rootobj:=trim(objlist[0].Split([dpkt])[0]);
           proplist.DelimitedText:=inlist[spp];     {Session properties to stringlist}
           proplist.Sort;
           StatusBar.Panels[1].Text:=IntToStr(proplist.Count);
@@ -370,7 +371,7 @@ begin
   finally
     if gridResults.RowCount=1 then begin           {Empty results, nothing added}
       gridResults.RowCount:=defRows;               {Show nice empty table}
-      mnSaveCSV.Enabled:=false;                    {Disable Save menu}
+      actSaveCSV.Enabled:=false;                   {Disable Save menu}
     end;
     inlist.Free;
     objList.Free;
@@ -430,7 +431,7 @@ var i, zhl, idx: integer;
     end;                                           {Done, s contains corrected line}
 
     if length(s)>(length(tabn)+length(endm)) then begin
-      inlist.SaveToFile(ChangeFileExt(fn, backup)); {Save backup first}
+      inlist.SaveToFile(ChangeFileExt(fn, bkup));  {Save backup first}
       for i:=0 to inlist.Count-1 do begin
         if pos(rootid, inlist[i])>0 then begin     {Find line with SessionProperties}
           obj:=inlist[i];
@@ -465,6 +466,7 @@ begin
     OpenDialog.FilterIndex:=1;                     {lfm file to check against}
     if OpenDialog.Execute then begin
       StatusBar.Panels[3].Text:=ExtractFileName(OpenDialog.FileName);
+      Caption:=rsProgName+tabn+StatusBar.Panels[3].Text;
       inlist.LoadFromFile(OpenDialog.FileName);
       SetStatusbar(inlist.Count);                  {Reset StatusBar}
       if inlist.Count>4 then begin
@@ -478,7 +480,7 @@ begin
           XML_read(fn, xmllist);
           if xmllist.Count>1 then begin
             CleanObj(objlist);
-            mnSaveCSV.Enabled:=true;               {Enable Save menu}
+            actSaveCSV.Enabled:=true;              {Enable Save menu}
             if cbFilter.Checked then
               gridResults.RowCount:=1              {Start at first line}
             else                                   {Create whole result list and fill}
@@ -520,7 +522,7 @@ begin
   finally
     if gridResults.RowCount=1 then begin           {Empty results, nothing added}
       gridResults.RowCount:=defRows;               {Show nice empty table}
-      mnSaveCSV.Enabled:=false;                    {Disable Save menu}
+      actSaveCSV.Enabled:=false;                   {Disable Save menu}
     end;
     inlist.Free;
     objlist.Free;
@@ -554,7 +556,7 @@ begin
   end;
 end;
 
-procedure TMain.actWaisenExecute(Sender: TObject);
+procedure TMain.actWaisenExecute(Sender: TObject); {Action find orphaned}
 begin
   StatusBar.Tag:=1;                                {Default icon shown}
   StatusBar.Refresh;
