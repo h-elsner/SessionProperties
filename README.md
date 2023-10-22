@@ -17,3 +17,5 @@ will be found only with intensive program tests.
 To overcome this situation this tool will find orphaned items in
 Session Properties, makes it easier to correct Session Properties and
 avoid incomplete program settings.
+The session properties must be stored as XML file! Support JSON or INI file
+pending.
