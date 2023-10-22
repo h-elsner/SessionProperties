@@ -2,9 +2,9 @@ resourcestring                                     {deutsch}
 
   rsProgName='SessionPropertyTool';
   capWaisen='&Verwaiste Einträge';
-  hntWaisen='Suche verwaiste Einträge in den Session Properties (F2).';
+  hntWaisen='Suche verwaiste Einträge in den Session Properties.';
   capXMLcheck='&Prüfe XML';
-  hntXMLcheck='Suche ungenutzte Einträge in XML Settings (F4).';
+  hntXMLcheck='Suche ungenutzte Einträge in XML Settings.';
   capClose='&Beenden';
   hntClose='Programm schliessen. Es wird nichts gespeichert.';
   capFilter='Nur verwaiste Einträge';
@@ -28,6 +28,12 @@ resourcestring                                     {deutsch}
   rsCorrected='korrigiert und gespeichert';
   rsExtFilter='Lazarus-Formulare|*.lfm;*.dfm|XML-Dateien|*.xml|Textdateien|*.txt|Alle Dateien|*.*';
   rsXML='XMLcheck';
+
+  capText='Textanzeige';
+  capSavetext='&Text speichern';
+  hntSaveText='Angezeigten Text in eine Datei speichern.';
+  ttSaveText='Text speichern als...';
+  hntSynEdit='Anzeige der geöffneten Datei'+lineending+'Bitte nur ändern und speichern, wenn man sicher weiß was man tut!';
 
   errEmpty='Leere Datei';
   errNoObj='Keine Objects gefunden';

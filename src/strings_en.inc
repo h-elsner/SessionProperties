@@ -2,9 +2,9 @@ resourcestring                                     {english}
 
   rsProgName='SessionPropertyTool';
   capWaisen='&Orphaned items';
-  hntWaisen='Find orphaned items in Session Properties (F2).';
+  hntWaisen='Find orphaned items in Session Properties.';
   capXMLcheck='&Check XML';
-  hntXMLcheck='Find unused items in XML settings (F4).';
+  hntXMLcheck='Find unused items in XML settings.';
   capClose='&Close';
   hntClose='Close programm (without saving)';
   capFilter='Only orphaned items';
@@ -28,6 +28,12 @@ resourcestring                                     {english}
   rsCorrected='corrected and saved';
   rsExtFilter='Lazarus-Forms|*.lfm;*.dfm|XML files|*.xml|Text files|*.txt|All files|*.*';
   rsXML='XMLcheck';
+
+  capText='Text viewer';
+  capSaveText='Save &text';
+  hntSaveText='Save this text to a file';
+  ttSaveText='Save text as...';
+  hntSynEdit='Show currently opened file'+lineending+'Please change and save this file only if you are sure what you have done!';
 
   errEmpty='Empty file';
   errNoObj='No objects found';

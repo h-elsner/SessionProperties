@@ -1,102 +1,23 @@
 object Main: TMain
-  Left = 1186
-  Height = 357
-  Top = 124
-  Width = 668
+  Left = 1546
+  Height = 484
+  Top = 140
+  Width = 671
   Caption = 'Main'
-  ClientHeight = 333
-  ClientWidth = 668
-  Constraints.MinHeight = 280
-  Constraints.MinWidth = 520
+  ClientHeight = 460
+  ClientWidth = 671
+  Constraints.MinHeight = 320
+  Constraints.MinWidth = 560
   Menu = MainMenu
   OnCreate = FormCreate
   Position = poDefaultPosOnly
-  SessionProperties = 'cbDelete.Checked;cbFilter.Checked;Height;OpenDialog.FileName;OpenDialog.FilterIndex;OpenDialog.InitialDir;Width;WindowState'
-  ShowHint = True
-  LCLVersion = '2.2.0.4'
-  object pnlHeader: TPanel
-    Left = 0
-    Height = 316
-    Top = 0
-    Width = 176
-    Align = alLeft
-    ClientHeight = 316
-    ClientWidth = 176
-    TabOrder = 0
-    object btnWaisen: TBitBtn
-      Left = 8
-      Height = 40
-      Top = 8
-      Width = 155
-      Action = actWaisen
-      Images = ImageList
-      ImageIndex = 1
-      TabOrder = 0
-    end
-    object btnClose: TBitBtn
-      Left = 8
-      Height = 40
-      Top = 266
-      Width = 155
-      Action = actClose
-      Anchors = [akLeft, akBottom]
-      Images = ImageList
-      ImageIndex = 0
-      TabOrder = 1
-    end
-    object cbFilter: TCheckBox
-      Left = 8
-      Height = 23
-      Top = 64
-      Width = 71
-      Caption = 'cbFilter'
-      Color = clDefault
-      ParentColor = False
-      TabOrder = 2
-    end
-    object btnXMLcheck: TBitBtn
-      Left = 8
-      Height = 40
-      Top = 96
-      Width = 155
-      Action = actXMLcheck
-      Images = ImageList
-      ImageIndex = 5
-      TabOrder = 3
-    end
-    object cbDelete: TCheckBox
-      Left = 8
-      Height = 23
-      Top = 147
-      Width = 80
-      Caption = 'cbDelete'
-      TabOrder = 4
-    end
-  end
-  object gridResults: TStringGrid
-    Left = 176
-    Height = 316
-    Top = 0
-    Width = 492
-    Align = alClient
-    Color = clDefault
-    ColCount = 3
-    FixedCols = 0
-    PopupMenu = PopupMenuTabelle
-    TabOrder = 1
-    OnPrepareCanvas = gridResultsPrepareCanvas
-    OnResize = gridResultsResize
-    ColWidths = (
-      201
-      182
-      84
-    )
-  end
+  SessionProperties = 'cbDelete.Checked;cbFilter.Checked;gridResults.Font;Height;OpenDialog.FileName;OpenDialog.FilterIndex;OpenDialog.InitialDir;SynEdit.Font;Width;WindowState'
+  LCLVersion = '2.2.6.0'
   object StatusBar: TStatusBar
     Left = 0
-    Height = 17
-    Top = 316
-    Width = 668
+    Height = 18
+    Top = 442
+    Width = 671
     Panels = <    
       item
         Width = 80
@@ -114,107 +35,743 @@ object Main: TMain
     SimplePanel = False
     OnDrawPanel = StatusBarDrawPanel
   end
+  object PageControl: TPageControl
+    Left = 0
+    Height = 442
+    Top = 0
+    Width = 671
+    ActivePage = tsTool
+    Align = alClient
+    Images = ImageList
+    TabIndex = 0
+    TabOrder = 1
+    object tsTool: TTabSheet
+      Caption = 'tsTool'
+      ClientHeight = 412
+      ClientWidth = 661
+      ImageIndex = 8
+      object pnlHeader: TPanel
+        Left = 0
+        Height = 412
+        Top = 0
+        Width = 176
+        Align = alLeft
+        ClientHeight = 412
+        ClientWidth = 176
+        TabOrder = 0
+        object btnWaisen: TBitBtn
+          Left = 8
+          Height = 40
+          Top = 8
+          Width = 155
+          Action = actWaisen
+          Images = ImageList
+          ImageIndex = 1
+          TabOrder = 0
+        end
+        object btnClose: TBitBtn
+          Left = 8
+          Height = 40
+          Top = 362
+          Width = 155
+          Action = actClose
+          Anchors = [akLeft, akBottom]
+          Images = ImageList
+          ImageIndex = 0
+          TabOrder = 1
+        end
+        object cbFilter: TCheckBox
+          Left = 8
+          Height = 23
+          Top = 64
+          Width = 71
+          Caption = 'cbFilter'
+          Color = clDefault
+          ParentColor = False
+          TabOrder = 2
+        end
+        object btnXMLcheck: TBitBtn
+          Left = 8
+          Height = 40
+          Top = 96
+          Width = 155
+          Action = actXMLcheck
+          Images = ImageList
+          ImageIndex = 5
+          TabOrder = 3
+        end
+        object cbDelete: TCheckBox
+          Left = 8
+          Height = 23
+          Top = 147
+          Width = 80
+          Caption = 'cbDelete'
+          TabOrder = 4
+        end
+      end
+      object gridResults: TStringGrid
+        Left = 176
+        Height = 412
+        Top = 0
+        Width = 485
+        Align = alClient
+        Color = clDefault
+        ColCount = 3
+        FixedCols = 0
+        Font.Height = -13
+        ParentFont = False
+        PopupMenu = popTabelle
+        TabOrder = 1
+        OnMouseWheelDown = gridResultsMouseWheelDown
+        OnMouseWheelUp = gridResultsMouseWheelUp
+        OnPrepareCanvas = gridResultsPrepareCanvas
+        OnResize = gridResultsResize
+        ColWidths = (
+          201
+          182
+          84
+        )
+      end
+    end
+    object tsText: TTabSheet
+      Caption = 'tsText'
+      ClientHeight = 412
+      ClientWidth = 661
+      ImageIndex = 7
+      inline SynEdit: TSynEdit
+        Left = 0
+        Height = 412
+        Top = 0
+        Width = 661
+        Align = alClient
+        Font.Height = 13
+        Font.Name = 'DejaVu Sans Mono'
+        Font.Pitch = fpFixed
+        Font.Quality = fqNonAntialiased
+        ParentColor = False
+        ParentFont = False
+        PopupMenu = popText
+        TabOrder = 0
+        OnMouseWheelDown = SynEditMouseWheelDown
+        OnMouseWheelUp = SynEditMouseWheelUp
+        Gutter.Width = 57
+        Gutter.MouseActions = <>
+        RightGutter.Width = 0
+        RightGutter.MouseActions = <>
+        Highlighter = SynFreePascalSyn1
+        Keystrokes = <        
+          item
+            Command = ecUp
+            ShortCut = 38
+          end        
+          item
+            Command = ecSelUp
+            ShortCut = 8230
+          end        
+          item
+            Command = ecScrollUp
+            ShortCut = 16422
+          end        
+          item
+            Command = ecDown
+            ShortCut = 40
+          end        
+          item
+            Command = ecSelDown
+            ShortCut = 8232
+          end        
+          item
+            Command = ecScrollDown
+            ShortCut = 16424
+          end        
+          item
+            Command = ecLeft
+            ShortCut = 37
+          end        
+          item
+            Command = ecSelLeft
+            ShortCut = 8229
+          end        
+          item
+            Command = ecWordLeft
+            ShortCut = 16421
+          end        
+          item
+            Command = ecSelWordLeft
+            ShortCut = 24613
+          end        
+          item
+            Command = ecRight
+            ShortCut = 39
+          end        
+          item
+            Command = ecSelRight
+            ShortCut = 8231
+          end        
+          item
+            Command = ecWordRight
+            ShortCut = 16423
+          end        
+          item
+            Command = ecSelWordRight
+            ShortCut = 24615
+          end        
+          item
+            Command = ecPageDown
+            ShortCut = 34
+          end        
+          item
+            Command = ecSelPageDown
+            ShortCut = 8226
+          end        
+          item
+            Command = ecPageBottom
+            ShortCut = 16418
+          end        
+          item
+            Command = ecSelPageBottom
+            ShortCut = 24610
+          end        
+          item
+            Command = ecPageUp
+            ShortCut = 33
+          end        
+          item
+            Command = ecSelPageUp
+            ShortCut = 8225
+          end        
+          item
+            Command = ecPageTop
+            ShortCut = 16417
+          end        
+          item
+            Command = ecSelPageTop
+            ShortCut = 24609
+          end        
+          item
+            Command = ecLineStart
+            ShortCut = 36
+          end        
+          item
+            Command = ecSelLineStart
+            ShortCut = 8228
+          end        
+          item
+            Command = ecEditorTop
+            ShortCut = 16420
+          end        
+          item
+            Command = ecSelEditorTop
+            ShortCut = 24612
+          end        
+          item
+            Command = ecLineEnd
+            ShortCut = 35
+          end        
+          item
+            Command = ecSelLineEnd
+            ShortCut = 8227
+          end        
+          item
+            Command = ecEditorBottom
+            ShortCut = 16419
+          end        
+          item
+            Command = ecSelEditorBottom
+            ShortCut = 24611
+          end        
+          item
+            Command = ecToggleMode
+            ShortCut = 45
+          end        
+          item
+            Command = ecCopy
+            ShortCut = 16429
+          end        
+          item
+            Command = ecPaste
+            ShortCut = 8237
+          end        
+          item
+            Command = ecDeleteChar
+            ShortCut = 46
+          end        
+          item
+            Command = ecCut
+            ShortCut = 8238
+          end        
+          item
+            Command = ecDeleteLastChar
+            ShortCut = 8
+          end        
+          item
+            Command = ecDeleteLastChar
+            ShortCut = 8200
+          end        
+          item
+            Command = ecDeleteLastWord
+            ShortCut = 16392
+          end        
+          item
+            Command = ecUndo
+            ShortCut = 32776
+          end        
+          item
+            Command = ecRedo
+            ShortCut = 40968
+          end        
+          item
+            Command = ecLineBreak
+            ShortCut = 13
+          end        
+          item
+            Command = ecSelectAll
+            ShortCut = 16449
+          end        
+          item
+            Command = ecCopy
+            ShortCut = 16451
+          end        
+          item
+            Command = ecBlockIndent
+            ShortCut = 24649
+          end        
+          item
+            Command = ecLineBreak
+            ShortCut = 16461
+          end        
+          item
+            Command = ecInsertLine
+            ShortCut = 16462
+          end        
+          item
+            Command = ecDeleteWord
+            ShortCut = 16468
+          end        
+          item
+            Command = ecBlockUnindent
+            ShortCut = 24661
+          end        
+          item
+            Command = ecPaste
+            ShortCut = 16470
+          end        
+          item
+            Command = ecCut
+            ShortCut = 16472
+          end        
+          item
+            Command = ecDeleteLine
+            ShortCut = 16473
+          end        
+          item
+            Command = ecDeleteEOL
+            ShortCut = 24665
+          end        
+          item
+            Command = ecUndo
+            ShortCut = 16474
+          end        
+          item
+            Command = ecRedo
+            ShortCut = 24666
+          end        
+          item
+            Command = ecGotoMarker0
+            ShortCut = 16432
+          end        
+          item
+            Command = ecGotoMarker1
+            ShortCut = 16433
+          end        
+          item
+            Command = ecGotoMarker2
+            ShortCut = 16434
+          end        
+          item
+            Command = ecGotoMarker3
+            ShortCut = 16435
+          end        
+          item
+            Command = ecGotoMarker4
+            ShortCut = 16436
+          end        
+          item
+            Command = ecGotoMarker5
+            ShortCut = 16437
+          end        
+          item
+            Command = ecGotoMarker6
+            ShortCut = 16438
+          end        
+          item
+            Command = ecGotoMarker7
+            ShortCut = 16439
+          end        
+          item
+            Command = ecGotoMarker8
+            ShortCut = 16440
+          end        
+          item
+            Command = ecGotoMarker9
+            ShortCut = 16441
+          end        
+          item
+            Command = ecSetMarker0
+            ShortCut = 24624
+          end        
+          item
+            Command = ecSetMarker1
+            ShortCut = 24625
+          end        
+          item
+            Command = ecSetMarker2
+            ShortCut = 24626
+          end        
+          item
+            Command = ecSetMarker3
+            ShortCut = 24627
+          end        
+          item
+            Command = ecSetMarker4
+            ShortCut = 24628
+          end        
+          item
+            Command = ecSetMarker5
+            ShortCut = 24629
+          end        
+          item
+            Command = ecSetMarker6
+            ShortCut = 24630
+          end        
+          item
+            Command = ecSetMarker7
+            ShortCut = 24631
+          end        
+          item
+            Command = ecSetMarker8
+            ShortCut = 24632
+          end        
+          item
+            Command = ecSetMarker9
+            ShortCut = 24633
+          end        
+          item
+            Command = EcFoldLevel1
+            ShortCut = 41009
+          end        
+          item
+            Command = EcFoldLevel2
+            ShortCut = 41010
+          end        
+          item
+            Command = EcFoldLevel3
+            ShortCut = 41011
+          end        
+          item
+            Command = EcFoldLevel4
+            ShortCut = 41012
+          end        
+          item
+            Command = EcFoldLevel5
+            ShortCut = 41013
+          end        
+          item
+            Command = EcFoldLevel6
+            ShortCut = 41014
+          end        
+          item
+            Command = EcFoldLevel7
+            ShortCut = 41015
+          end        
+          item
+            Command = EcFoldLevel8
+            ShortCut = 41016
+          end        
+          item
+            Command = EcFoldLevel9
+            ShortCut = 41017
+          end        
+          item
+            Command = EcFoldLevel0
+            ShortCut = 41008
+          end        
+          item
+            Command = EcFoldCurrent
+            ShortCut = 41005
+          end        
+          item
+            Command = EcUnFoldCurrent
+            ShortCut = 41003
+          end        
+          item
+            Command = EcToggleMarkupWord
+            ShortCut = 32845
+          end        
+          item
+            Command = ecNormalSelect
+            ShortCut = 24654
+          end        
+          item
+            Command = ecColumnSelect
+            ShortCut = 24643
+          end        
+          item
+            Command = ecLineSelect
+            ShortCut = 24652
+          end        
+          item
+            Command = ecTab
+            ShortCut = 9
+          end        
+          item
+            Command = ecShiftTab
+            ShortCut = 8201
+          end        
+          item
+            Command = ecMatchBracket
+            ShortCut = 24642
+          end        
+          item
+            Command = ecColSelUp
+            ShortCut = 40998
+          end        
+          item
+            Command = ecColSelDown
+            ShortCut = 41000
+          end        
+          item
+            Command = ecColSelLeft
+            ShortCut = 40997
+          end        
+          item
+            Command = ecColSelRight
+            ShortCut = 40999
+          end        
+          item
+            Command = ecColSelPageDown
+            ShortCut = 40994
+          end        
+          item
+            Command = ecColSelPageBottom
+            ShortCut = 57378
+          end        
+          item
+            Command = ecColSelPageUp
+            ShortCut = 40993
+          end        
+          item
+            Command = ecColSelPageTop
+            ShortCut = 57377
+          end        
+          item
+            Command = ecColSelLineStart
+            ShortCut = 40996
+          end        
+          item
+            Command = ecColSelLineEnd
+            ShortCut = 40995
+          end        
+          item
+            Command = ecColSelEditorTop
+            ShortCut = 57380
+          end        
+          item
+            Command = ecColSelEditorBottom
+            ShortCut = 57379
+          end>
+        MouseActions = <>
+        MouseTextActions = <>
+        MouseSelActions = <>
+        Lines.Strings = (
+          'SynEdit'
+        )
+        VisibleSpecialChars = [vscSpace, vscTabAtLast]
+        SelectedColor.BackPriority = 50
+        SelectedColor.ForePriority = 50
+        SelectedColor.FramePriority = 50
+        SelectedColor.BoldPriority = 50
+        SelectedColor.ItalicPriority = 50
+        SelectedColor.UnderlinePriority = 50
+        SelectedColor.StrikeOutPriority = 50
+        BracketHighlightStyle = sbhsBoth
+        BracketMatchColor.Background = clNone
+        BracketMatchColor.Foreground = clNone
+        BracketMatchColor.Style = [fsBold]
+        FoldedCodeColor.Background = clNone
+        FoldedCodeColor.Foreground = clGray
+        FoldedCodeColor.FrameColor = clGray
+        MouseLinkColor.Background = clNone
+        MouseLinkColor.Foreground = clBlue
+        LineHighlightColor.Background = clNone
+        LineHighlightColor.Foreground = clNone
+        inline SynLeftGutterPartList1: TSynGutterPartList
+          object SynGutterMarks1: TSynGutterMarks
+            Width = 24
+            MouseActions = <>
+          end
+          object SynGutterLineNumber1: TSynGutterLineNumber
+            Width = 17
+            MouseActions = <>
+            MarkupInfo.Background = clBtnFace
+            MarkupInfo.Foreground = clNone
+            DigitCount = 2
+            ShowOnlyLineNumbersMultiplesOf = 1
+            ZeroStart = False
+            LeadingZeros = False
+          end
+          object SynGutterChanges1: TSynGutterChanges
+            Width = 4
+            MouseActions = <>
+            ModifiedColor = 59900
+            SavedColor = clGreen
+          end
+          object SynGutterSeparator1: TSynGutterSeparator
+            Width = 2
+            MouseActions = <>
+            MarkupInfo.Background = clWhite
+            MarkupInfo.Foreground = clGray
+          end
+          object SynGutterCodeFolding1: TSynGutterCodeFolding
+            MouseActions = <>
+            MarkupInfo.Background = clNone
+            MarkupInfo.Foreground = clGray
+            MouseActionsExpanded = <>
+            MouseActionsCollapsed = <>
+          end
+        end
+      end
+    end
+  end
   object ImageList: TImageList
     Left = 568
     Top = 200
     Bitmap = {
-      4C7A070000001000000010000000000C00000000000078DACD587B4C54571A9F
-      A6696A62AA36B125AD114CB4689B94F2F0B5BBB2D0366A6A4B44B31A8D9B1511
-      682D2058BB5BC516D9B2184128083E18054704878720E0300822CC94FA406A0B
-      BE40501E2355042AA0282283F3DBEF3B331766A680D83FB67BC92FCCBDE7FCBE
-      F7B9F77C47ABD5CAB484CCCC0ADB03077E724949A99CA5353D33078FDBDA3EAA
-      B5B76FBB38DCB88747AD5C26BB031B9B2A5D7C7CBCABF918CB7470D0951BC7F3
-      743B77EEF42B2C2C9C65C9D7125F03992C0FAEAEDFD6E6E7E7BB4A7A8DDC4AF0
-      F8C4899F60DDBA75888D8D2D2F2E2EB61DE237CAA5392E2E4AA4A7A7FBF173B6
-      99F51A652FC41B6FBC81B0B03001954AE522F17D7C9A425E7EF9EA23E3BC6FC9
-      067F4C9EDC41BFEF0A9B643257BA9F2C781111111DD9D9D9CBAC63C03264B2AB
-      265D3518D2BB19143C6CDAB44970333333FF3E5C0C1932598F89232183B89FC0
-      DFDF5FE81E4EEFE87C39C5C365D0E79178527E8DFE9AF35388BF0494339D75CE
-      2CF37787E2DF61C535C2D67637A826FC46E2C6C757B9DADA3692EE3326CE6E13
-      866C70704829F7F0F0915B73B9B66C6CFA743259DDE0DCB7DF76279440AA8721
-      D863E1C285A9E67CAEF9A13CA5E0A5975EC2071F7C2062357FFECD5AA38CA1FC
-      474545D59AD79D25DF7E902BD5A7311F23E73F3FFFECE4CD9BABFC1C1C42CA5D
-      5D3D06B952AC376FBEEAE7E3139FFAACFC935DF26DDBB68939070E1CB08813AF
-      057E3E5CDDC17451E1C0CBCB0B4D4D4D638646A391495CBEB66FDF2EC07248F6
-      33C13699F3A5EB79F8555555080A0A1AD4CD7077771F339FFD90EE6526EEE1C3
-      87C764C370FC69D3A6C1D1D111EC11DFCB4689C7707C01373723DF8491FC19C9
-      7E4F4FCF2159A3C463243EFFE61898E379F8717171837E33F8FE7FE13FFBCD73
-      3907BF872F81ED1539749309AE943FA35FC6671286E3339823A3E5C1F30741F2
-      2CFEA8EE47E2B32E733D437E59F2790D4AEFF66741D8249359C3E27AF3CD375F
-      F0F0F0B059B264C9FB1F7DF491E7A2458B96D23BD38D6043D70BB251AEF5EBD7
-      BF48EFAD8D0D0D0D65E7CF9FEF282F2FD7937DFDE44FFBB973E74AE57279D08A
-      152B5E1C8E1B1E1E6EAFD3E94E6AB41A83324B0979BE1CBBF37623561D8BF8A2
-      78A4ABD271E2E40983BA48ADF6F1F179CB5A2F710B49CFC0FED4FD483C9F8894
-      961424752421EA6E14429A42B0E5E21624172523BD307D203B2F5B4D7EBD28F9
-      AB56AB83CB3465867D47F6E168CB51943D2C43656F25B48FB438DA7D14911D91
-      F0BDED8B95375622B93419870B0E1B424343035E7DF555112BF65799A944C2D9
-      0414F614E26ADF55B40DB4A1F6492D543D2AECB9B70781AD81F0D079C0EF921F
-      D24AD2B057B9B794BECBAF7FFCF1C7EE151515EDFB8FEF475C731CD43D6A5CEE
-      BB8C567D2B6AFA6A70A2E70412EE2520A03540F017D42D40D48528C4E7C47738
-      3B3BBB538E967EFFFDF7FDD1B9D188688D80B25B89D30F4FA3A2B742F891DA9D
-      8A9D1D3BE173DB078B9A176166DD4CC45C8A81224BD14F35EEB978F1624FCA91
-      3E323F12C1BF048BB9899D8950742920EF946347C70E04B70663D9AD6598DB38
-      1753AE4F41F495682465243D717070E0DA789FE2DEB147B507DEF5DEC2CEAD77
-      B722B43D14216D21F0BFE38FD52DABE1DAE88A19F53330BD763AA2ABA211A38C
-      697FF7DD77DD3EFCF0439BB367CF96E5E4E5C0FFBC3F16372F16BA56B4ACC0F2
-      5BCB85CDF31AE7615AFD348CAF1D8F55D75721FB876C84C78697BEF3CE3B36AF
-      BDF6DA0B8989891BA9EE0C0AB502AE35AE70BAE984D90DB3E1DCE08C59376661
-      4ADD148CAB1907BB5A3BE45CC9417256B2C1DBDB3BF095575E11F5CC3549DF6A
-      754141C1404A490AD6FCB406F6D7EC31B9663226D44CC0D49AA95855B70AC72F
-      1FC7A18C4303E111E12A8A9D451D534DDAE7E6E6AA69DF6A5015A9442DECAADA
-      85D82BB148F8390105E50548CD483544EC8828209FDF1A6E0D704DD2F76BE391
-      23474AE99BDD9E9191D1AF542AF5F4FE6DA7EF7B29D91C60ADD7FAE29AA4BAB2
-      A1DA70A3B94B29479E1467778AD5EB92BFA35D7FF8FAD7680D4AE531C8E56AEC
-      DE7D92F642A769EFA8A5FD7C214E9C2832A8E90530EAFADF7F14898997909272
-      1F49497ADAAFE91112D2832D5B1A909C5C46728A06B2B3F37FBBFECB34867DFB
-      D270F46837CACA80CA4AD07B18740F444602BEBEC0CA95BD24E30C7D0F8B7EBB
-      FE95994848A842612170F52AD0D606D4D6827A0C60CF1E203010F0F000FCFC5A
-      9196A6C5DEBD9996EB7FBF8ADEF9DD50AB81CB9781D656A0A606E433482E1010
-      60E42F58F0847CBA46315159AEFFE842DA5BEAA15402A74F031515107EA4A682
-      F6EE808F0FB068113073E653C4C43442A1C8B65CFF91C5080E1E1073131341E3
-      A01C003B76809E03CB960173E70253A618101DADA3D86659AEFF3DC5F0F67E20
-      ECDCBA15080D05C51DD4B700AB5783FA2960C60C60FA743DF16F920DC72CD77F
-      4E3ECDADC3E2C5465D2B5600CB971B6D9E370FF4ED03C68F0756AD7A407BE00A
-      8487EFFEEDFA5714939E4770720266CF069C9D8159B3D86660DC38C0CE6E0039
-      39F594C39C91D77F8A166BD6FC027BFB27B4DF7F8A09130C983A552FF41E3F5E
-      8F4387B206C2C3778CBEFE55C5A21676EDBA49F5ABA3DF7528283843B9C83444
-      44ECF8BF5AFFA7FDE76E22C4112E123A09FD25FE730D04947C6EC4E9803FA174
-      E35F5012F86794F8CFEF2A09FEEB8F851BE6FC8DB75734FF606FF3253C2618F4
-      7D84C778FAA417038FBAD1DFDD0EFD837BE2FE69FF63E8EF77A0AFADC9F06B75
-      A9FE42E43F7E556F98B39EF8D77B9B2EA12D2B0C867E9ED78B8A681FE87B3A69
-      7E3B067A1F08B903BDF7F1E4D75BE86BBD81CEEA532019203BFA88DFDDDB548D
-      BB19A1620E83F9FDF7DBA07FD829F4B2FEFEEEBBE8BBDB80C7776E40971A82AE
-      6B3FE0E4863906F6F751C345B4129FE7302EC4F8D1FF363CEDEB219B48F7C32E
-      3C696BC263D2FDF8761D9A8F6C416B79260A3F9B038ED5C39B17D09AFE0DD9A7
-      33E25E0B714CBA1FF7A0FFDEED416EEFEDEB683CFC157E294B43C1A7B3998F87
-      75E77147F98DB0FB428C2F2E7CF7297E8C0F2004A2326E033DF7156312EA93BE
-      84EE94022ABFD9223F0FAE9F454BDA36B4905F2D6921B845BF6FA56E233F0947
-      B6A289F4352AFE8586435FE246D217B899FC251AD40790EF6BE25F2B377209CC
-      134833729B53B6087B1B0FFD53F0EA0F6E461DA13E6F2F727D5C04BFFB721971
-      4204742619AC5B70155FA1817433B7EEE017B82EDF841A7930AE1DFB0E39EB5D
-      708AF85DD525B87524C4543FCFC6957D81B89C1E8563DECE5C8FE8FAB948D86A
-      A0787B6B778E0AAE85AA84CFF173EA7F90B58EF801F3D179B190F82182AFB959
-      3E2A98FF53DC67B878E8DFC820FE29FF79867B952AAA899031EBAFE41C1FFC1A
-      E95E4E86539FCF69EC389783F6B33963F6BFE2C0D7389FB895F9F7287EB1C51B
-      E6A88B36CCE93C49F5A826705D9DA0DAC8F375C171CA51F67A676451AC32C9DE
-      0C2F27A157E9E5743F639DD319EBBEFBF7F4FFD6FCB1F4DED6FDBFD4BB732FCF
-      72F2F2F206FB20F37305F331F3FEDFFAE25E90E7F17C0DDD9B431A93FA3F9E63
-      7D999F0358F3A53173BEF9F9C376AB730437BA3787355FEAB787FA3485F82FF5
-      DD238D99F3CD63E3E8D84571ABB2E845871B33E7B3CD9C4F63BF5E659127B679
-      BB4603EB316BBE1BF5ED0CD339A3055F36CC98B5FD52ECB8F796722C8D49B133
-      1FB3EEDF59BEB91F1636B07E333F46EAFF993FD21914F3A5FC4BF9B0E68F76E6
-      C1CF996B7EDEF53CEBC57CCD48D7F3F4FF12AC2ED94878EFBDF7C499C3A44993
-      469D371CD6AE5D3B786EC17EB32CCE9DF53CE9BCCA7A8CF3A0A04DA8F43EE0FF
-      71BC29B5E28B7C6BF3F8CC94F6777683E32C93F9B42713F5D2D5D5256C19CE56
-      AE0D96CF36338F6D5DBA74A9E073CC35A6DC0D67BF75BCD80EB689F9AC97F36B
-      AAA931C74EB29DDF6D2C8F73C0368E85CB7AD917AA0B017136AAD88E69B18EA3
-      DACFB1631F39061CB3EAEAEAC1F7CCC4DC89E22CCB338C721AE66E1167297E0C
-      B6358EC076531F873CD2CFB2DC63DDE118E40899560659B00C93DC27C1D3CB93
-      E44C147282A8C1609FD79AD64D5E9E06DDA6F36496C5B604C57A411646FC2082
-      A7F12C2DEC70ACE0E7529C99574DB16EEEEA263BE244FC189C038E83583B7161
-      B00BB61332ECD6DA212CD6C8377DCB06BF371CB360B269B8B34FF1BDD91E0445
-      EE502DB27E7E2E8D8B9A31F9CEFFD97EF371BE6FA67A348F1FEB6B6A6E1E9C27
-      CDE5673C57807E37091FBB9EBBA646C27F0105A198B7
+      4C7A0900000010000000100000006E0F00000000000078DACD596B5054679AEE
+      4C2A95D466A3A662C64A5C2F55668893AA1805C5EC6E1819B3CA6A8611CD6274
+      CCAC8A40545430667714278A125014041A2FB4DC44908B8280D0C84D2028820E
+      8A2282A0DC95161068EE97C67EF67D4FF781EE4E83303F76F7504F9D3EE7FB9E
+      F7FE9D73DE8FDCDC5C492E2136B670E6D9B377CCC2C36FCFCDD5DED3058FCF9C
+      D9536E62D254646CDCDABA5C26913462DAB4E23AA9546AA13BC632E7CDABCBD3
+      8C27D61D3D7AD431353575AE3E3F97F839904812616171B83C2929C942D4ABE1
+      DE068F4F9EFC076CDEBC19BEBEBE79E9E9E93347F8D532718E995914A2A3A31D
+      F93EDBCC7A35B297E1830F3E809B9B9B80E4E46433916F6F5FE3FAE69BA53D9A
+      7987C906274C9DDA42BF9F0B36492416743D55E0797878B4C4C5C5AD368C01CB
+      90484AB5BACA30A2770F2878D8BD7BB7C08D8D8DFDD6580C1912499796232286
+      B87F80939393A0DB98DEB1F9328A87D9B0CFA3F1C4FC6AFCD5E587137F252867
+      758639D3CF5F23C5BFC580ABC1CC99FEA09A701C8D2B95165BCC9C594DBA6F68
+      39FE5A8CD8306F5E789EB5B5BDCC90CBB5356D5A7F9D4452313CF7B7BFB52464
+      42AC87119860D9B26511BA7CAEF9913C85E38D37DEC0D2A54B85587DFEF99372
+      8D8C91FC1F3B76AC5CB7EEF4F926C35CB13E35F9183DFF4949F953F7EC29769C
+      37CF35CFC2C27A982BC67ACF9E52477B7B69C4ABF24F76C9F6EFDF2FCC397BF6
+      AC5E9C782DF07D637507ED4185834D9B36A1A6A666DCC8C9C991885C3E0E1E3C
+      2880E590EC57826DD2E58BC744F8C5C5C57076761ED6CDB0B4B41C379FFD10AF
+      255AEEB973E7C6658331FEECD9B3317FFE7CB0477C2D19231EC6F802962CD1F0
+      B518CD9FD1ECB7B1B1199135463C46E3F36F8E812E26C2F7F3F31BF69BC1D7FF
+      1BFEB3DF3C9773F0F7F045B0BD420E974804AE983F8D5F9A7B228CF119CC91D0
+      F2E0F9C320797A7F54F7A3F15997AE9E11BFF4F9BC06C567FBAB20D824911842
+      EFF8F0C30F5FB3B6B69EB672E5CADFAF58B1C266F9F2E5ABE899B984308D8ED7
+      24631C5BB66C799D9E5BBBAAAAAAB20B0A0A5AF2F2F25464DF20F9D37CF3E6CD
+      6B3299CCD9D6D6F675635C77777793BABABAAB39B939EAA88B519025C9E09FE8
+      0F5FB92FA46952442747E3CAD52B6A799A5C6E6F6FFF1B43BDC44D253D436722
+      CE20B02010E10DE1086E09C6B1E7C7E05AE38ABD457B11921682E8D4E8A1B8C4
+      3839F9F5BAE8AF5C2E77C9CEC9569F3E7F1A171A2E20BB3B1BB77B6F23B72717
+      179417E0D5E20587670E58FB782D42AE85E05CCA39F581030776BCFBEEBB42AC
+      D8DFA8D82804E40720B52B15A5FDA5681A6A42F9403992BB9271B2F524762A76
+      C2BACE1A8EF71D119919895351A7AED17BF9D75F7DF59565616161F399CB67E0
+      57EB0779971C25FD2550A81428EB2FC395AE2B08680DC00EC50E81FF45C51738
+      76EB18A4F1D2165353534BCAD1AA9F7FFE79D03BC11B1E0A0F4429A390D59D85
+      C2DE42C18F0865048EB61C85FD337B2CAF5D8E8F2B3E86CF7D1F845D0C1BA41A
+      B7B1B2B2B2A11CA9BC92BCE0F2D445981BD81688B0F630C8DA64F06CF1848BC2
+      05ABEB57C3BCDA1CD31F4D87F7036F04C7040FCC9B378F6BE3F714F79693C927
+      61576927D8B9EFF93E1C683E00D7265738353A617DC37A58545BE0A3CA8F30A7
+      7C0EBC8BBDE113E5D3FCE9A79F2EF9F2CB2FA7E5E7E767C727C6C3A9C00956B5
+      56822EDB065BACA95F23D8BCB87A316657CEC6DBE56F63DDA37588BB1E07775F
+      F76B9F7CF2C9B4F7DF7FFFB5C0C0C05D5477EA3079182CCA2CB0E0C9022CAC5A
+      08D32A53CC7D3C17D32BA6E3ADB2B730AB7C16E21FC423E46288DACECE6EE73B
+      EFBC23D433D724BDABE529292943E199E1D87067034C1E9A606AD9544C2A9B84
+      196533B0AE621D2E975C46684CE890BB877B32C54EAF8EA9264D121212E4F4DD
+      AA4E4E4B166AE178F171F83EF045C0DD00A4E4A520222642EDE1E991423EFFC6
+      D81AE09AA4F7D7AEF3E7CF5FA37776734C4CCC605454948A9EBFCDF47EBF4636
+      EF30D46B78704D525D4DA3DA58427357518E6C28CE9614AB5F8BFE8E75FC9FAF
+      FF9C5C7554D425C86472F8FB5FA56FA12CFA76CCA5EFF9545CB992A696D30360
+      CCF57FE6020203EF233CBC03C1C12AFA5E53C1D5B50B7BF7562124249BE4A40D
+      C5C525FD72FD67E7A84F9F8EC4850B4A646703B76F839EC3A06BC0CB0B707000
+      D6AEED251937E87D98F6CBF51F158B808062A4A602A5A5405313505E0EEA3180
+      9327819D3B016B6BC0D15181C8C85C9C3A15ABBFFECF24D3335F09B91C282901
+      140AA0AC0CE433482EB0638786FFC51703E4D3438A49B2FEFAF74EA56F4B15A2
+      A280AC2CA0B010821F1111A06F77C0DE1E58BE1CF8F8E397F0F1A94658589CFE
+      FAF74A878BCB9030373010340ECA01E0E909BA0FAC5E0D989B03D3A7ABE1ED5D
+      47B1BDA8BFFE4FA6C3CEAE53B073DF3EE0C00150DC417D0BB07E3DA89F023EFA
+      0898334745FC2764C325FDF51F9F44732B6065A5D1656B0BAC59A3B179F162D0
+      BB0F78FB6D60DDBA4EFA062E84BBBBFF2FD77F583AE9E9C18205C0C28580A929
+      30772EDB0CBCF516306BD610E2E32B2987F1A3AFFFF05C6CD8F014262603F4BD
+      FF129326A93163864AD07BF9722542432F0EB9BB7B8EBDFE93D3855A387EFC09
+      D56F1DFDAE404ACA0DCA45ACDAC3C3F3FFD5FACF7232DF4DF0231411DA088399
+      4EE66A0232B76B90B5E39F716DD7BF2273E7BF20D3E9F3F64C97DFFD2D75DBA2
+      FFE0CF2B9A1FD45B7B1F7D04B5AA9FD0879703BD18EA516250D90C5567AB70FD
+      72B00FAA8E16F437D5A85FDCBBA6BAE5F59F2FE4DB166D21FEA3DE9AFB68BAE8
+      06F520CFEB45A1B73D545D6D34BF1943BD9D82DCA1DE0E0CBCA847BFE231DAEE
+      65806480ECE827BEB2B7E61E9EC71C10E630983FD8D10455779BA097F50F2A9F
+      A3FF7915FA1A1FA32EC215ED0FAFE3EAB6456AF6B7A7AA080AE2F31CC62D1F47
+      3A37E1657F17D944BABBDB31D054833ED2DDF7AC02B5E7F74291178BD4AD8BC0
+      B1EA7E720B8AE81FC9BE3A0D5A1B88A3D5DDD785C1D667C3DCDE678F507DEE2F
+      789A1D8994EF16321FDD1505688CFA51B0FB968F036E9DF80E7F93EE20ECC46D
+      BF6D74DF4118135119FC03EA32C290ECB850C84FE7A37C3444EE4703F9D510E9
+      8A7AFA5D1FB19FFC249CDF871AD2571DF6DFA80AFD018F83BFC793901F50253F
+      8B24072DFF619E864B609E80480DB7367CAF606F75E87F09BCCAA03DA8205426
+      9E4282BD99C057966413C755409D5606EB16B8617F4115E9666E45D0F77824DB
+      8D32990B1E5E3A81F82D66C8207EFBBD4CD49F77D5D6CFABF1E0F44E94441FC3
+      253B53AE47B4DF4D136C5553BCED728F8E09AE85E280EDB81BF1132E6E26FE8E
+      CFD156944A7C57819FF3246F4C30FF8EDF5614851E420CF1339C16AB5B6F2753
+      4DB88E5BFF6DCE71D05F11BD69813A63FBA2EA969BF168CE8F1FB7FF8567FF8A
+      82C07DCC6FA5F8F9A66F5B244FDBB6A8ED2AD5A39CC07575856A23D1C10C9729
+      47715B4C719162154BF6C66C5A20E88DDAB4A02366F3821B867DF7DFD3FF1BF2
+      C7D37B1BF6FF62EFCEBD3CCB494C4C1CEE8374F71574C774FB7FC3837B419EC7
+      F373E85A17E298D8FFF11CC343771FC0902F8EE9F275F71F0E1AEC232CA16B5D
+      18F2C57E7BA44F0B13CE62DF3DDA982E5F3736F3E7B753DC8AF57A516363BA7C
+      B699F3A9E9D78BF5F2C4361FCCC981E198217F09F5ED0CED3EA31E5F6264CCD0
+      7E3176DC7B8B3916C7C4D8E98E19F6EF2C5FD70F3D1B58BF8E1FA3F5FFCC1F6D
+      0F8AF962FEC57C18F2C7DAF3E0FBCCD5DDEF9AC87AD15D33E23191FE5F84C121
+      190D9F7DF699B0E73065CA9431E719C3C68D1B87F72DD86F96C5B9339C27EE57
+      198E711EC2E823547C1EF0D98F3F4A0DF842BE731379CF94BEEF660D8FB34CE6
+      D33799502FEDEDED822DC66CE5DA60F96C33F3D8D655AB56097C8E798E3677C6
+      EC378C17DBC136319FF5727EB53535EED889B6F3B38DE5710ED8C6F170592FFB
+      42752140D81B0D3B88D9BEF3C7B49F63C73E720C3866F7EEDD1B7ECE4C4E982C
+      EC65D9B8514EDD2CF5E22CC68FC1B6FA11D86EEAE39048FA5996A5AF25E63BCF
+      87245702898B04532CA7C066930DC9992CC871A606837DDEA85D37898939506A
+      F7935916DBE2ECBB091237E23B136C347B696EE77C057E02C59979F728D6B5ED
+      4AB2C34F881F8373C07110D68E9F1B66B9CC1264CCDA380B6EBE1ABEF65D36FC
+      BEE198B9904DC6F63E85F7CD416784258CD422EBE7FBE2B850335ADFF9CCF6EB
+      8EF3752DD5A36EFC585F4D6DEDF03C712EDFE3B902E8778DE063FB846BEA55A0
+      E39F086604F3576036E15746F866FDFDFD4A954AF572686808C640E3D40B9FF4
+      3726836533B7BBBB1B3D3D3DC3E8E8E810D66E1335D42C43418DF1A953A7F464
+      D0C17D8D398FF7F5F5616060403833BABABAA0542AD1DCDC2CF07B7B7BC13A64
+      3299204397DFAE54095C11CCE7F99D9D9D686969F9853FCC11F96FFE83F952FB
+      ED5D58F375A730F6A76FBAE1B0B51B2D2FFA86FD78F1E28560476363A31E7FFA
+      A7B5EF2DFC5D43C916C74EACDDA8E56FE8C6D6AD5DD8E2D485E7CD1A196C07C7
+      A2B5B575983FFDB317EB565A77F6D93974C096FAEF06C5A030F6B47110DF7CDB
+      09BE6FFD750762E59D822F1C0F9623F297AFECE87072E982D51FDB86EE3CECD3
+      F3EF6E693F56AE6EC777BB9458B9BE1D5D3DFD820C86C87F6FA162DDBFD928FB
+      36382861E3D08AFAE703C218DBF1B55D3BF8BE956D2B62D23B87E3CA75A0EBFF
+      3F9A97BD37D7AAB2C4D6A10D7FDCAE89F31AFB76AC677C4F316B1BC0E0E0A000
+      E61AF239FEBF9A64BAF49B3DCD586EA7C9F38A6F5B056EAB7284AB0B43BE583F
+      86A09A348A51F8EAD16ADF085E8A7CAD8C85149B1EBE3F1E2ECDEDE235A7C39F
+      C132C6B17E45F05A9F319E67436868A84B707070595050908AD68D6A22CF9590
+      901017E2F53C7DFA146D6D6D387DFAF4849E5BC42DABAFAF17D67D7A3AEFAB04
+      4C881F1818A862DDFC2C954AA5797CEFC48913F0F6F6E6FFE5BED217B277A8AA
+      AA0AF9F9F9FC7EFBD9C7C7E77A5C5C1CCACBCB71E4C89131F9F49CFA77B2575D
+      5A5A8AC2C24264656521232303797979B871E306FF2FB8CC18AF21FEB8B432FA
+      6831D9AB2A282840515111F87CF3E64D5CBF7E5D7837FCF4D34F3D870F1F7631
+      E4D6C57A4915E9C1684C0DC4A3586F949494402E97C3CBCB4BCDF6924E95BBBB
+      7BD9A143878C708F481BAF06A3BD380B6D7733507F99F841FBF97FFF7D9E9E9E
+      73C6F2B52EDA83B832E265A229371ACFAF45E04561326A220FA1C4EBCFB7C6E2
+      D65C709736A604A2ED4E069A722EE059CA6928D243D072F332AAC3F6E1A1FBEA
+      8BA3730F4A1B934F520F9F86A66CE2D2EFC6AB4168BE118FEAD0BD78706855DC
+      58BAAB487E6BD155C1DEA749528ADB59345F8F4375F00F7870D03AEE55F5F1F8
+      8C335AC94F455A10D887E6EB9788BB07F77F5C91309EFAACF07728E21835E75D
+      42736E0C9EC876E3FE7EAB8489D4F8C323DF3CA41891CEAF707FDFB20971FF07
+      46C44F9F
     }
   end
   object OpenDialog: TOpenDialog
@@ -228,7 +785,7 @@ object Main: TMain
     Left = 472
     Top = 200
   end
-  object PopupMenuTabelle: TPopupMenu
+  object popTabelle: TPopupMenu
     Images = ImageList
     Left = 360
     Top = 200
@@ -293,6 +850,26 @@ object Main: TMain
       ImageIndex = 0
       OnExecute = actCloseExecute
       ShortCut = 27
+    end
+    object actSaveText: TAction
+      Caption = 'actSaveText'
+      ImageIndex = 4
+      OnExecute = actSaveTextExecute
+    end
+  end
+  object SynFreePascalSyn1: TSynFreePascalSyn
+    Enabled = False
+    CompilerMode = pcmObjFPC
+    NestedComments = True
+    TypeHelpers = False
+    Left = 368
+    Top = 264
+  end
+  object popText: TPopupMenu
+    Left = 480
+    Top = 264
+    object mnSaveText: TMenuItem
+      Action = actSaveText
     end
   end
 end

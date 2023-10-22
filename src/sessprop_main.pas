@@ -4,7 +4,7 @@
         {                                                        }
         {         Copyright (c) 2020    Helmut Elsner            }
         {                                                        }
-        {       Compiler: FPC 3.0.4   /    Lazarus 2.0.8         }
+        {       Compiler: FPC 3.2.2   /    Lazarus 2.2.6         }
         {                                                        }
         { Pascal programmers tend to plan ahead, they think      }
         { before they type. We type a lot because of Pascal      }
@@ -32,19 +32,23 @@ Boston, MA 02110-1335, USA.
 ================================================================================
 Brief description:
 
-Lazarus-IDE - SessionProperties to store program settings for next start.
+Lazarus-IDE - SessionProperties are made to store program settings for next start.
 
 If you try to rename objects that are already assigned to Session Properties,
-these items will not be renamed.
+those items will not be renamed.
 
-This means, assignmet is lost and program settings are not kept.
-Relicts with old object names are left in XML files. If many values are stored
+This means, the assignments are lost and program settings are not kept.
+Relicts with old object names are left in XML file. If many values are stored
 in larger projects, it quickly becomes confusing. Usually, this behaviour
 will be found only with intensive program tests.
 
 To overcome this situation this tool will find orphaned items in
-Session Properties, makes it easier to correct Session Properties and
+Session Properties, which makes it easier to correct Session Properties and
 avoid incomplete program settings.
+SessionProperties must be stored in XML format!
+
+https://github.com/h-elsner/SessionPropertiesTool
+
 ================================================================================
 
 Status Bar: Index          0           1          2              3
@@ -60,12 +64,13 @@ gridResult.Tag: 0..Property list
 StatusBar.Tag: Index of icon in Panel2
 
 
-ToDo: XML handling! Multiline XML not recognized if lists are stored too.
+ToDo: XML handling! Multiline XML not recognized if lists are stored.
 
 2020-10-05   Idea and functionality
 2020-10-06   Improved GUI, finalization and languages
 2020-10-14   Check XML Settings, delete unused
 2020-10-15   Main Menu and ActionList added
+2023-10-21   Text viewer added
 
 ==============================================================================*)
 
@@ -78,22 +83,25 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Buttons,
   Grids, ComCtrls, StdCtrls, XMLPropStorage, Menus, ActnList,
-  laz2_DOM, laz2_xmlread;
+  laz2_DOM, laz2_xmlread, SynEdit, SynHighlighterPas, Types;
 
 type                                             {TMain}
   TMain = class(TForm)
-    actClose: TAction;
+    actClose: TAction;                           {Actions to force consistency}
+    actSaveText: TAction;
     actSaveCSV: TAction;
     actXMLcheck: TAction;
     actWaisen: TAction;
     ActionList: TActionList;
-    btnXMLcheck: TBitBtn;
     btnClose: TBitBtn;
     btnWaisen: TBitBtn;
-    cbFilter: TCheckBox;
+    btnXMLcheck: TBitBtn;
     cbDelete: TCheckBox;
-    ImageList: TImageList;
+    cbFilter: TCheckBox;
+    gridResults: TStringGrid;
+    ImageList: TImageList;                       {Imagelist with all used glyphs}
     MainMenu: TMainMenu;
+    mnSaveText: TMenuItem;
     mnClose: TMenuItem;
     N2: TMenuItem;
     mnSave: TMenuItem;
@@ -103,22 +111,36 @@ type                                             {TMain}
     mnFunction: TMenuItem;
     mnSaveCSV: TMenuItem;
     OpenDialog: TOpenDialog;
+    PageControl: TPageControl;                   {Separate main functionaly and text viewer}
     pnlHeader: TPanel;
-    PopupMenuTabelle: TPopupMenu;
+    popTabelle: TPopupMenu;
+    popText: TPopupMenu;
     SaveDialog: TSaveDialog;
     StatusBar: TStatusBar;
-    gridResults: TStringGrid;
-    XMLPropStorage1: TXMLPropStorage;
+    SynEdit: TSynEdit;
+    SynFreePascalSyn1: TSynFreePascalSyn;
+    tsTool: TTabSheet;
+    tsText: TTabSheet;
+    XMLPropStorage1: TXMLPropStorage;            {Store session properties in XML file}
     procedure actCloseExecute(Sender: TObject);
     procedure actSaveCSVExecute(Sender: TObject);
+    procedure actSaveTextExecute(Sender: TObject);
     procedure actWaisenExecute(Sender: TObject);
     procedure actXMLcheckExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure gridResultsMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure gridResultsMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
     procedure gridResultsPrepareCanvas(sender: TObject; aCol, aRow: Integer;
                                        aState: TGridDrawState);
     procedure gridResultsResize(Sender: TObject);
     procedure StatusBarDrawPanel(StatusB: TStatusBar; Panel: TStatusPanel;
                                  const Rect: TRect);
+    procedure SynEditMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure SynEditMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
   private
     procedure SetStatusbar(num: integer);          {Reset StatusBar}
     procedure WaisenSuchen(fn: string);            {Search orphaned items}
@@ -153,18 +175,20 @@ const
                                                       bit2..Column width    4  }
 {Keywords}
   kwObject='object';
+  kwInline='inline';
   kwSessProp='SessionProperties';
 
 
 implementation
 
 {$R *.lfm}
-{$I strings_de.inc}                                {German GUI}
-{.$I strings_en.inc}                               {English GUI}
+{$I strings_de.inc}                               {German GUI}
+{ $I strings_en.inc}                                {English GUI}
 
                                                    {TMain: main (and only) form}
 procedure TMain.FormCreate(Sender: TObject);       {Initiate all and set defaults}
 begin
+  ShowHint:=true;                                  {Usability: Enable hints for the whole application}
   Caption:=rsProgName;                             {Assign text values}
   actWaisen.Caption:=capWaisen;
   actWaisen.Hint:=hntWaisen;
@@ -172,6 +196,8 @@ begin
   actXMLcheck.Hint:=hntXMLcheck;
   actClose.Caption:=capClose;
   actClose.Hint:=hntClose;
+  actSavetext.Caption:=capSaveText;
+  actSaveText.Hint:=hntSaveText;
   cbFilter.Caption:=capFilter;
   cbFilter.Hint:=hntFilter;
   cbDelete.Caption:=capDelete;                     {Delete unused items}
@@ -186,6 +212,25 @@ begin
   gridResults.RowCount:=defRows;                   {Show empty table}
   gridResults.Rows[0].Delimiter:=sep;
   gridResults.Rows[0].DelimitedText:=rsHeader;
+  PageControl.ActivePage:=tsTool;
+  tsTool.Caption:=rsProgName;
+  tsText.Caption:=capText;
+  SynEdit.Text:='';
+  SynEdit.Hint:=hntSynEdit;
+end;
+
+procedure TMain.gridResultsMouseWheelDown(Sender: TObject; Shift: TShiftState; {Adapt font size result table}
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  if ssCtrl in Shift then
+    gridResults.Font.Size:=gridResults.Font.Size-1;
+end;
+
+procedure TMain.gridResultsMouseWheelUp(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  if ssCtrl in Shift then
+    gridResults.Font.Size:=gridResults.Font.Size+1;
 end;
 
 procedure ShowSearchResult(grid: TStringGrid; pos: integer; w1, w2: string;
@@ -223,7 +268,11 @@ begin
     p:=pos(kwObject, list[i]);                     {Create list of all objects in lfm}
     if p>0 then
       outlist.Add(trim(StringReplace(list[i],
-    kwObject, '', [rfReplaceAll, rfIgnoreCase])));
+                  kwObject, '', [rfReplaceAll, rfIgnoreCase])));
+    p:=pos(kwInline, list[i]);                     {Create list of all inline in lfm (for SynEdit)}
+    if p>0 then
+      outlist.Add(trim(StringReplace(list[i],
+                  kwinline, '', [rfReplaceAll, rfIgnoreCase])));
   end;
 end;
 
@@ -264,6 +313,20 @@ begin                                              {Display icon [pidx] from Ima
     StatusB.Canvas.Brush.Color:=StatusBar.Color;   {Background for text}
     StatusB.Canvas.TextOut(Rect.Left+ImageList.Width+4, Rect.Top, Panel.Text);
   end;
+end;
+
+procedure TMain.SynEditMouseWheelDown(Sender: TObject; Shift: TShiftState; {Adapt font size text viewer}
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  if ssCtrl in Shift then
+    SynEdit.Font.Size:=SynEdit.Font.Size+1;
+end;
+
+procedure TMain.SynEditMouseWheelUp(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  if ssCtrl in Shift then
+    SynEdit.Font.Size:=SynEdit.Font.Size-1;
 end;
 
 procedure TMain.ShowObjectList(list: TStringList); {Object list to result table}
@@ -470,7 +533,7 @@ begin
       inlist.LoadFromFile(OpenDialog.FileName);
       SetStatusbar(inlist.Count);                  {Reset StatusBar}
       if inlist.Count>4 then begin
-        Screen.Cursor:=crHourGlass;
+        Screen.Cursor:=crHourGlass;                {Maybe this takes longer thus inform the user}
         findProperties(inlist, objlist);           {create object list}
 
         if objlist.Count>0 then begin
@@ -532,12 +595,12 @@ begin
   end;
 end;
 
-procedure TMain.actCloseExecute(Sender: TObject);  {Action Close}
+procedure TMain.actCloseExecute(Sender: TObject);  {Action Close, consistency for button and menu item}
 begin
   Close;
 end;
 
-procedure TMain.actSaveCSVExecute(Sender: TObject);
+procedure TMain.actSaveCSVExecute(Sender: TObject); {Action Save}
 begin
   SaveDialog.Title:=ttSaveDialog;
   SaveDialog.InitialDir:=OpenDialog.InitialDir;
@@ -550,8 +613,19 @@ begin
                                        rsXML+'.csv';
   end;
 
+
   if SaveDialog.Execute then begin                 {Save file}
     gridResults.SaveToCSVFile(SaveDialog.FileName, sep);
+    StatusBar.Panels[3].Text:=rsSavedAs+ExtractFileName(SaveDialog.FileName);
+  end;
+end;
+
+procedure TMain.actSaveTextExecute(Sender: TObject); {Save text from SynEdit}
+begin
+  SaveDialog.Title:=ttSaveText;
+  SaveDialog.FileName:=OpenDialog.FileName;
+  if SaveDialog.Execute then begin
+    SynEdit.Lines.SaveToFile(SaveDialog.FileName);
     StatusBar.Panels[3].Text:=rsSavedAs+ExtractFileName(SaveDialog.FileName);
   end;
 end;
@@ -563,19 +637,23 @@ begin
   StatusBar.Hint:=hntStatusW;
   OpenDialog.Title:=ttOpenDialogLFM1;
   OpenDialog.FilterIndex:=1;                       {.lfm file}
-  if OpenDialog.Execute then
+  if OpenDialog.Execute then begin
+    SynEdit.Lines.LoadFromFile(OpenDialog.FileName);
     WaisenSuchen(OpenDialog.FileName);
+  end;
 end;
 
-procedure TMain.actXMLcheckExecute(Sender: TObject);
+procedure TMain.actXMLcheckExecute(Sender: TObject); {Action XML checking}
 begin
   StatusBar.Tag:=5;                                {Default icon for XML shown}
   StatusBar.Refresh;
   StatusBar.Hint:=hntStatusW;
   OpenDialog.Title:=ttOpenDialogXML;
   OpenDialog.FilterIndex:=2;                       {.xml file}
-  if OpenDialog.Execute then
+  if OpenDialog.Execute then begin
+    SynEdit.Lines.LoadFromFile(OpenDialog.FileName);
     XMLSuchen(OpenDialog.FileName);                {File name of the XML file}
+  end;
 end;
 
 end.
